@@ -2,6 +2,11 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+/**
+ * 使用 JSON 中间件
+ */
+app.use(express.json())
+
 app.listen(port, () => {
   console.log(`服务已启动，端口${port}`)
 })
@@ -38,4 +43,21 @@ app.get('/posts/:postId', (req, res) => {
   const item = data.find((item) => item.id == postId)
 
   res.send(item)
+})
+
+app.post('/posts', (req, res) => {
+  const { content } = req.body
+
+  // 输出请求头部数据
+  console.log(req.headers['sing-along'])
+
+  // 设置响应头部数据
+  res.set('Sing-Along', 'Hi i am express')
+
+  // 设置状态码
+  res.status(201)
+
+  res.send({
+    message: `成功创建了内容：${content}`,
+  })
 })
