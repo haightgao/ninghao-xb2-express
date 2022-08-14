@@ -30,8 +30,9 @@ export const store = async (
 ) => {
   try {
     const { title, content } = req.body;
+    const { id: userId } = req.user;
 
-    const data = await createPost({ title, content });
+    const data = await createPost({ title, content, userId });
     res.status(201).send(data);
   } catch (error) {
     next(error);
