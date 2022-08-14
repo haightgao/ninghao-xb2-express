@@ -18,12 +18,22 @@ export const defaultErrorHandler = (
   next: NextFunction,
 ) => {
   let statusCode: number, message: string;
-
-  message = '';
   /**
    * 处理异常
    */
-  switch (message) {
+  switch (error.message) {
+    case 'NAME_IS_REQUIRED':
+      statusCode = 400;
+      message = '请提供用户名';
+      break;
+    case 'PASSWORD_IS_REQUIRED':
+      statusCode = 400;
+      message = '请提供密码';
+      break;
+    case 'USER_ALREADY_EXIST':
+      statusCode = 409;
+      message = '用户名已存在';
+      break;
     default:
       statusCode = 500;
       message = '服务出现了问题 ~~';
