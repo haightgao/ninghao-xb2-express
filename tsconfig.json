@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    // "forceConsistentCasingInFileNames": true,
+    // "strict": false,
     "module": "commonjs", // 用于指定模块的代码生成规则，可以使用 commonjs 、 amd 、 umd 、 system 、 es6 、 es2015 、 none 这些选项
     "declaration": true, // 是否需要生成定义文件d.ts，设置为true，则生成
     "removeComments": true, // 用于指定是否需要输出注释，设置为true，则不输出注释
