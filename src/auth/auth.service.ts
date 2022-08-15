@@ -18,3 +18,26 @@ export const signToken = (options: SignTokenOptions) => {
 
   return token;
 };
+
+/**
+ * 检查用户是否拥有指定资源
+ */
+interface PossessOptions {
+  resourceId: number;
+  resourceType: string;
+  userId: string;
+}
+
+export const possess = async (options: PossessOptions) => {
+  const { resourceId, resourceType, userId } = options;
+
+  const sql = `
+    select count(${resourceType}.id) as count
+    from ${resourceType}
+    where ${resourceType}.id = ? and userId = ?
+  `;
+
+  const [data] = await connection.promise().query(sql, [resourceId, userId]);
+
+  return (data as any[])[0]['count'] ? true : false;
+};

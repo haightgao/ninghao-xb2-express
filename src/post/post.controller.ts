@@ -48,12 +48,12 @@ export const update = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const { id } = req.params;
+  const { postId } = req.params;
 
   const post = _.pick(req.body, ['title', 'content']);
 
   try {
-    const data = await updatePost(parseInt(id, 10), post);
+    const data = await updatePost(parseInt(postId, 10), post);
     res.status(200).send(data);
   } catch (error) {
     next(error);
