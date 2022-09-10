@@ -22,7 +22,7 @@ export const index = async (
   next: NextFunction,
 ) => {
   try {
-    const data = await getPosts();
+    const data = await getPosts({ sort: req.sort, filter: req.filter });
     res.send(data);
   } catch (error) {
     next(error);

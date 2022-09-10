@@ -1,3 +1,4 @@
+import { GetPostsOptionsFilter } from './../src/post/post.service';
 import { TokenPayload } from '../src/auth/auth.interface';
 
 declare global {
@@ -5,6 +6,8 @@ declare global {
     export interface Request {
       user: TokenPayload;
       fileMetaData: { width?: number; height?: number; metadata?: {} };
+      sort: string;
+      filter: GetPostsOptionsFilter;
     }
   }
 }
