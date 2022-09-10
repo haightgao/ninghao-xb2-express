@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { POSTS_PER_PAGE } from '../app/app.config';
 
 /**
  * 排序方式
@@ -77,17 +76,15 @@ export const filter = async (
 /**
  * 分页
  */
-export const pagination = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const { page = 1 } = req.query;
+export const pagination = (itemPerPage: number) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const { page = 1 } = req.query;
 
-  const limit = parseInt(POSTS_PER_PAGE, 10) || 30;
-  const offset = limit * (parseInt(page as string, 10) - 1);
+    const limit = itemPerPage || 30;
+    const offset = limit * (parseInt(page as string, 10) - 1);
 
-  req.pagination = { limit, offset };
+    req.pagination = { limit, offset };
 
-  next();
+    next();
+  };
 };

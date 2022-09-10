@@ -16,23 +16,64 @@ export const createUser = async (user: UserModel) => {
 };
 
 /**
- * 按用户名查找用户
+ * 查找用户
  */
 interface GetUserOptions {
   password?: boolean;
 }
 
-export const getUserByName = async (
-  name: string,
-  options: GetUserOptions = {},
-): Promise<UserModel> => {
-  const { password } = options;
-  const sql = `
-    select id,name ${password ? ', password' : ''}
-    from user
-    where name = ?
+export const getUser = (condition: string) => {
+  return async (
+    param: string | number,
+    options: GetUserOptions = {},
+  ): Promise<UserModel> => {
+    const { password } = options;
+    const sql = `
+      select 
+        user.id,
+        user.name,
+        IF (
+          COUNT(avatar.id),1,NULL
+        ) as avatar
+        ${password ? ', password' : ''}
+      from 
+        user
+      LEFT JOIN avatar
+          ON avatar.userId = user.Id
+      where 
+        ${condition} = ?
+    `;
+
+    const [data] = await connection.promise().query(sql, param);
+
+    return data[0].id ? data[0] : null;
+  };
+};
+
+/**
+ * 按用户名查找用户
+ */
+
+export const getUserByName = getUser('user.name');
+
+/**
+ * 按用户Id查找用户
+ */
+export const getUserById = getUser('user.id');
+
+/**
+ * 更新用户
+ */
+export const updateUser = async (userId: number, userData: UserModel) => {
+  const statement = `
+    UPDATE user
+    SET ?
+    WHERE user.id = ?
   `;
 
-  const [data] = await connection.promise().query(sql, name);
-  return (data as object[])[0];
+  const params = [userData, userId];
+
+  const [data] = await connection.promise().query(statement, params);
+
+  return data;
 };

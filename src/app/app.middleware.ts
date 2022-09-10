@@ -70,6 +70,18 @@ export const defaultErrorHandler = (
       statusCode = 400;
       message = '不能上传此类型文件';
       break;
+    case 'USER_NOT_FOUND':
+      statusCode = 404;
+      message = '没找到这个用户';
+      break;
+    case 'NOT_FOUND':
+      statusCode = 404;
+      message = '没找到';
+      break;
+    case 'PASSWORD_IS_SAME':
+      statusCode = 400;
+      message = '要修改的密码不能与原密码一样';
+      break;
     default:
       statusCode = 500;
       message = '服务出现了问题 ~~';
