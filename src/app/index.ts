@@ -7,6 +7,7 @@ import tagRouter from '../tags/tag.router';
 import commentRouter from '../comment/comment.router';
 import avatarRouter from '../avatar/avatar.router';
 import likeRouter from '../like/like.router';
+import appRouter from './app.router';
 import { defaultErrorHandler } from './app.middleware';
 
 /**
@@ -23,6 +24,7 @@ app.use(express.json());
  * 应用路由
  */
 app.use(
+  appRouter,
   postRouter,
   userRouter,
   authRouter,

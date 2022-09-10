@@ -11,7 +11,6 @@ export const validateUserData = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log('验证用户数据');
   const { name, password } = req.body;
 
   if (!name) return next(new Error('NAME_IS_REQUIRED'));
@@ -61,6 +60,7 @@ export const validateUpdateUserData = async (
 
     // 读取用户数据
     const user = await userService.getUserById(userId, { password: true });
+
     if (!user) {
       return next(new Error('USER_NOT_FOUND'));
     }
@@ -78,7 +78,7 @@ export const validateUpdateUserData = async (
     }
 
     if (update.password) {
-      const matched = await bcrypt.compare(update.passowrd, user.password);
+      const matched = await bcrypt.compare(update.password, user.password);
 
       if (matched) {
         return next(new Error('PASSWORD_IS_SAME'));
@@ -87,6 +87,7 @@ export const validateUpdateUserData = async (
       req.body.update.password = await bcrypt.hash(update.password, 10);
     }
   } catch (error) {
+    console.log(error);
     return next(error);
   }
   next();

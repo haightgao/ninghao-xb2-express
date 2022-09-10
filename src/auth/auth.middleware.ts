@@ -38,8 +38,6 @@ export const validateLoginData = async (
  * 验证用户身份
  */
 export const authGuard = (req: Request, res: Response, next: NextFunction) => {
-  console.log('验证用户身份');
-
   try {
     // 提前 Authorization
     const authorization = req.header('Authorization');
