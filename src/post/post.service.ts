@@ -42,11 +42,13 @@ export const getPosts = async (options: GetPostsOptions) => {
       ${sqlFragment.user},
       ${sqlFragment.totalComments},
       ${sqlFragment.file},
-      ${sqlFragment.tags}
+      ${sqlFragment.tags},
+      ${sqlFragment.totalLikes}
     from post
     ${sqlFragment.leftJoinUer}
     ${sqlFragment.leftJoinOneFile}
     ${sqlFragment.leftJoinTag}
+    ${filter.name == 'userLiked' && sqlFragment.innerJoinUserLikePost}
     WHERE ${filter.sql}
     GROUP BY post.id
     ORDER BY ${sort}
@@ -162,9 +164,10 @@ export const getPostsTotalCount = async (options: GetPostsOptions) => {
     ${sqlFragment.leftJoinUer}
     ${sqlFragment.leftJoinOneFile}
     ${sqlFragment.leftJoinTag}
+    ${filter.name == 'userLiked' && sqlFragment.innerJoinUserLikePost}
     WHERE ${filter.sql}
   `;
 
-  const [data] = await connection.promise().query(statement, params)
-  return data[0].total
+  const [data] = await connection.promise().query(statement, params);
+  return data[0].total;
 };
