@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import postRouter from '../post/post.router';
 import userRouter from '../user/user.router';
 import authRouter from '../auth/auth.router';
@@ -14,6 +15,15 @@ import { defaultErrorHandler } from './app.middleware';
  * 创建应用
  */
 const app = express();
+
+/**
+ * 跨与处理
+ */
+app.use(
+  cors({
+    origin: '*',
+  }),
+);
 
 /**
  * 处理 JSON
