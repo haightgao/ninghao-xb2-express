@@ -22,6 +22,7 @@ const app = express();
 app.use(
   cors({
     origin: '*',
+    exposedHeaders: 'X-Total-Count',
   }),
 );
 
