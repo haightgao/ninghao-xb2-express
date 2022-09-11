@@ -1,3 +1,4 @@
+import { deletePostFiles, getPostFiles } from './../file/file.service';
 import { Request, Response, NextFunction } from 'express';
 import _ from 'lodash';
 import {
@@ -35,6 +36,7 @@ export const index = async (
       sort: req.sort,
       filter: req.filter,
       pagination: req.pagination,
+      currentUser: req.user,
     });
     res.send(data);
   } catch (error) {
@@ -91,8 +93,15 @@ export const destroy = async (
   res: Response,
   next: NextFunction,
 ) => {
+  const { postId } = req.params;
+
   try {
-    const { postId } = req.params;
+    const files = await getPostFiles(parseInt(postId, 10));
+
+    if (files.length) {
+      await deletePostFiles(files);
+    }
+
     const data = await deletePost(parseInt(postId, 10));
     res.send(data);
   } catch (error) {
@@ -174,7 +183,9 @@ export const show = async (req: Request, res: Response, next: NextFunction) => {
   const { postId } = req.params;
 
   try {
-    const post = await getPostById(parseInt(postId, 10));
+    const post = await getPostById(parseInt(postId, 10), {
+      currentUser: req.user,
+    });
     res.send(post);
   } catch (error) {
     next(error);

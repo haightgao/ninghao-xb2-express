@@ -11,6 +11,7 @@ export const createUserLikePost = async (userId: number, postId: number) => {
   `;
 
   const [data] = await connection.promise().query(statement, [userId, postId]);
+
   return data;
 };
 

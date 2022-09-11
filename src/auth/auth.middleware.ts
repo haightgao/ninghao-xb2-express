@@ -14,7 +14,6 @@ export const validateLoginData = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log('验证用户登录数据');
   const { name, password } = req.body;
 
   if (!name) return next(new Error('NAME_IS_REQUIRED'));
@@ -38,25 +37,31 @@ export const validateLoginData = async (
  * 验证用户身份
  */
 export const authGuard = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // 提前 Authorization
-    const authorization = req.header('Authorization');
-    if (!authorization) throw new Error();
+  // try {
+  //   // 提前 Authorization
+  //   const authorization = req.header('Authorization');
+  //   if (!authorization) throw new Error();
 
-    // 提前 jwt 令牌
-    const token = authorization.replace('Bearer ', '');
-    if (!token) throw new Error();
+  //   // 提前 jwt 令牌
+  //   const token = authorization.replace('Bearer ', '');
+  //   if (!token) throw new Error();
 
-    // 验证令牌
-    const decoded = jwt.verify(token, PUBLIC_KEY as string, {
-      algorithms: ['RS256'],
-    });
+  //   // 验证令牌
+  //   const decoded = jwt.verify(token, PUBLIC_KEY as string, {
+  //     algorithms: ['RS256'],
+  //   });
 
-    // 请求里添加当前用户
-    req.user = decoded as TokenPayload;
+  //   // 请求里添加当前用户
+  //   req.user = decoded as TokenPayload;
 
+  //   next();
+  // } catch (error) {
+  //   next(new Error('UNAUTHORIZED'));
+  // }
+
+  if (req.user.id) {
     next();
-  } catch (error) {
+  } else {
     next(new Error('UNAUTHORIZED'));
   }
 };
@@ -101,4 +106,40 @@ export const accessControl = (options: AccessControlOptions) => {
       }
     }
   };
+};
+
+/**
+ * 当前用户
+ */
+export const currentUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  let user: TokenPayload = {
+    id: null,
+    name: 'anonymous',
+  };
+
+  try {
+    // 提前 Authorization
+    const authorization = req.header('Authorization');
+
+    // 提前 jwt 令牌
+    const token = authorization.replace('Bearer ', '');
+
+    if (token) {
+      // 验证令牌
+      const decoded = jwt.verify(token, PUBLIC_KEY as string, {
+        algorithms: ['RS256'],
+      });
+
+      // 请求里添加当前用户
+      user = decoded as TokenPayload;
+    }
+  } catch (error) {}
+
+  req.user = user;
+
+  next();
 };
